@@ -1,0 +1,607 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+#quiz-area {
+    margin-bottom: 20px;
+}
+
+#question-header {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+#question-type-display {
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+
+#extra-statements-area,
+#current-extra-statement-area {
+    background-color: #eef;
+    border-left: 4px solid #aab;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    color: #444;
+    border-radius: 4px;
+}
+
+#extra-statements-area h2,
+#current-extra-statement-area h2,
+#current-question-area h2 {
+    margin-top: 0;
+    font-size: 1em;
+    color: #335;
+    border-bottom: 1px dashed #aab;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+
+}
+
+#extra-statements-content p:last-child,
+#current-extra-statement-content p:last-child {
+    margin-bottom: 0;
+}
+
+#current-extra-statement-area {
+    background-color: #efe;
+    border-left: 4px solid #aea;
+}
+
+#current-extra-statement-area h2 {
+    color: #353;
+    border-bottom: 1px dashed #aea;
+}
+
+#current-question-area {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#question-statement {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+#answer-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#answer-options li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#answer-options li:hover {
+    background-color: #e9e9e9;
+}
+
+#answer-options li.selected {
+    background-color: #d0e0ff;
+    border-color: #a0c0ff;
+}
+
+#answer-options li.correct {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    font-weight: bold;
+}
+
+#answer-options li.incorrect {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+#feedback-area {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+#feedback-area.correct {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#feedback-area.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+
+#controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#next-btn,
+#restart-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#next-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#next-btn:hover:not(:disabled),
+#restart-btn:hover {
+    background-color: #0056b3;
+}
+
+#score-area {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+#results-area {
+    text-align: center;
+    padding: 30px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border: 1px solid #D8000C;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Style for individual extra statement paragraphs */
+#extra-statements-content p,
+#current-extra-statement-content p {
+    /* Spacing between paragraphs */
+    margin: 0 0 8px 0;
+    padding-left: 10px;
+    /* Indent slightly */
+    border-left: 2px solid #ccc;
+}
+
+#current-extra-statement-content p {
+    border-left: 2px solid #8c8;
+}
+
+#extra-statements-content p:first-child,
+#current-extra-statement-content p:first-child {
+    margin-top: 5px;
+}
+
+/* Setup Area */
+#setup-area {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#setup-area h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group select,
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* Include padding in width */
+    box-sizing: border-box;
+}
+
+.start-btn {
+    padding: 12px 25px;
+    /* Green */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.2s ease;
+}
+
+.start-btn:hover {
+    background-color: #218838;
+}
+
+/* Progress Bar */
+#progress-bar,
+#progress-bar-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    /* Keep margin for top one */
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+}
+
+#progress-bar-bottom {
+    /* Add space above the bottom bar */
+    margin-top: 25px;
+    /* Remove bottom margin if it's the last element before results */
+    margin-bottom: 0;
+}
+
+#progress-bar .progress-indicator,
+#progress-bar-bottom .progress-indicator {
+    flex-grow: 1;
+    min-width: 20px;
+    height: 10px;
+    background-color: #d0d0d0;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#progress-bar .progress-indicator:hover,
+#progress-bar-bottom .progress-indicator:hover {
+    opacity: 0.8;
+}
+
+#progress-bar .progress-indicator.current,
+#progress-bar-bottom .progress-indicator.current {
+    border-width: 2px;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.progress-indicator {
+    /* Make indicators share space */
+    flex-grow: 1;
+    /* Minimum width */
+    min-width: 20px;
+    height: 10px;
+    /* Default: unanswered */
+    background-color: #d0d0d0;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    /* Indicate clickability */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#progress-bar .progress-indicator.correct,
+#progress-bar-bottom .progress-indicator.correct {
+    /* Green */
+    background-color: #28a745 !important;
+    border-color: #1e7e34 !important;
+}
+
+#progress-bar .progress-indicator.incorrect,
+#progress-bar-bottom .progress-indicator.incorrect {
+    /* Red */
+    background-color: #dc3545 !important;
+    border-color: #b82c39 !important;
+}
+
+#progress-bar .progress-indicator.current,
+#progress-bar-bottom .progress-indicator.current {
+    border-width: 2px;
+    /* Blue for current */
+    border-color: #007bff !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#progress-bar .progress-indicator:hover,
+#progress-bar-bottom .progress-indicator:hover {
+    opacity: 0.8;
+}
+
+/* Navigation Controls */
+#navigation-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+#navigation-controls button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#navigation-controls button,
+#retry-options button {
+    padding: 10px 15px;
+    /* Ayuda a alinear icono y texto */
+    vertical-align: middle;
+    /* Evita que el texto del botón se parta en dos líneas */
+    white-space: nowrap;
+}
+
+#navigation-controls button i,
+#retry-options button i {
+    /* Espacio entre icono y texto */
+    margin-right: 8px;
+    /* Asegura espacio mínimo para el icono */
+    min-width: 1.1em;
+    /* Asegura que el margen funcione */
+    display: inline-block;
+    text-align: center;
+}
+
+#navigation-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#navigation-controls button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+#prev-btn {
+    /* Gray */
+    background-color: #6c757d;
+}
+
+#prev-btn:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+
+
+/* Results Area */
+#results-area {
+    text-align: center;
+    padding: 30px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 30px;
+}
+
+#results-area h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+#results-area p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+#retry-options {
+    margin-top: 25px;
+}
+
+#retry-options button {
+    margin: 0 10px;
+    padding: 10px 18px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+#retry-failed-btn {
+    /* Yellow/Orange */
+    background-color: #ffc107;
+    border: 1px solid #d39e00;
+    color: #333;
+}
+
+#retry-failed-btn:hover {
+    background-color: #e0a800;
+}
+
+#restart-btn {
+    /* Teal */
+    background-color: #17a2b8;
+    border: 1px solid #117a8b;
+    color: white;
+}
+
+#restart-btn:hover {
+    background-color: #138496;
+}
+
+/* General Error Style */
+.error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border: 1px solid #D8000C;
+    padding: 10px 15px;
+    border-radius: 4px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+#exit-btn {
+    /* Red, like danger/exit */
+    background-color: #dc3545;
+    /* Add some space */
+    margin-right: 15px;
+}
+
+#exit-btn:hover {
+    background-color: #c82333;
+}
+
+.checkbox-group {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 4px;
+    max-height: 200px;
+    /* Limit height and allow scroll */
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.checkbox-group label {
+    display: block;
+    /* Each checkbox on its own line */
+    margin-bottom: 8px;
+    font-weight: normal;
+    /* Override potential bold from form-group label */
+}
+
+.checkbox-group hr {
+    margin: 10px 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+/* Aplica a cada div de contexto acumulado */
+#extra-statements-content div,
+#current-extra-statement-content,
+#question-statement,
+/* Si aplica a las respuestas también */
+#answer-options li {
+    /* Respeta espacios y saltos de línea, ajusta línea */
+    white-space: pre-wrap;
+    /* Asegura que palabras largas se rompan */
+    word-wrap: break-word;
+}
+
+#extra-statements-content div {
+    /* Ajusta este valor (1em, 1.5em, 15px, etc.) según el espacio que quieras */
+    margin-bottom: 1em;
+    /* Asegúrate de que cualquier padding o borde existente no interfiera */
+}
+
+/* Opcional: Evitar margen en el último elemento para que no haya espacio extra al final */
+#extra-statements-content div:last-child {
+    margin-bottom: 0;
+}
+
+/* Contenedor para cada fila del encabezado */
+.question-header-row {
+    text-align: center;
+    /* Centra el contenido de los spans dentro de cada div */
+    margin-bottom: 5px;
+    /* Pequeño espacio entre las filas */
+    /* Puedes añadir otros estilos como padding si es necesario */
+}
+
+/* Estilo específico para la etiqueta de origen */
+.source-label {
+    /* Necesario para que text-align funcione bien en el span si es el único elemento */
+    display: inline-block;
+    font-size: 0.9em;
+    color: #555;
+    font-style: italic;
+}
+
+/* Estilos para número y tipo (si necesitas ajustarlos) */
+#question-number-display,
+#question-type-display {
+    margin: 0 5px;
+    /* Pequeño espacio entre número y tipo */
+    /* Otros estilos que ya tuvieras */
+}
+
+@media (max-width: 700px) {
+
+    /* Ajusta este breakpoint según necesites */
+    #navigation-controls button .button-text,
+    #retry-options button .button-text {
+        display: none;
+        /* Oculta el texto */
+    }
+
+    #navigation-controls button i,
+    #retry-options button i {
+        margin-right: 0;
+        /* Quita el margen cuando solo está el icono */
+    }
+
+    /* Ajusta el padding/tamaño para botones solo con icono */
+    #navigation-controls button,
+    #retry-options button {
+        padding: 10px 12px;
+        /* Menos padding horizontal */
+        /* Opcional: Establecer un ancho mínimo/fijo */
+        /* min-width: 40px; */
+    }
+
+    /* Ajusta el layout del contenedor si es necesario */
+    #navigation-controls {
+        /* Podrías necesitar ajustar el espacio o permitir que los elementos se envuelvan */
+        /* flex-wrap: wrap; */
+        /* gap: 10px; */
+        /* Si usas wrap */
+    }
+
+    /* Ejemplo: Reducir tamaño de fuente del score en móviles */
+    #score-area {
+        font-size: 0.9em;
+    }
+}

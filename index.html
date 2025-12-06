@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Exámenes</title>
+    <!-- Font Awesome CDN Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Shared Global Variables -->
+    <script>
+        var originalQuestionsData = null;
+        var requestedNumQuestions = 0;
+    </script>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- SETUP AREA -->
+        <div id="setup-area">
+            <h1>Configuración del Examen</h1>
+            <p id="setup-error" class="error" style="display: none;"></p>
+            
+            <div class="form-group">
+                <label>Selecciona Examen(es):</label>
+                <div class="checkbox-group" id="exams-list">
+                    <label>
+                        <input type="checkbox" id="select-all-exams" checked> <strong>Seleccionar Todos</strong>
+                    </label>
+                    <hr>
+                    <!-- Checkboxes will be injected here by JS -->
+                    <p id="loading-exams-msg">Cargando lista de exámenes...</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="num_questions">Número de preguntas a mostrar:</label>
+                <input type="number" id="num_questions" min="1" value="10" required>
+                <small>(Se seleccionarán aleatoriamente de todos los exámenes elegidos)</small>
+            </div>
+            <button id="start-btn" class="start-btn">Comenzar Examen</button>
+        </div>
+
+        <!-- QUIZ AREA -->
+        <div id="quiz-container" style="display: none;">
+            <h1 id="quiz-title">Examen</h1>
+            <div id="progress-bar" class="progress-bar-container"></div> <!-- Progress bar top -->
+
+            <div id="quiz-area">
+                <div id="question-header-source" class="question-header-row"> <!-- Contenedor padre para centrar -->
+                    <span id="question-source-display" class="source-label"></span>
+                </div>
+                <div id="question-header">
+                    <span id="question-number-display"></span>
+                    <span id="question-type-display"></span>
+                </div>
+                <div id="extra-statements-area" style="display: none;" class="context-box">
+                    <h2>Contexto Adicional Acumulado:</h2>
+                    <div id="extra-statements-content"></div>
+                </div>
+                <div id="current-extra-statement-area" style="display: none;" class="context-box">
+                    <h2>Contexto Específico (Pregunta Actual):</h2>
+                    <div id="current-extra-statement-content"></div>
+                </div>
+                <div id="current-question-area">
+                    <h2>Pregunta:</h2>
+                    <p id="question-statement"></p>
+                    <ul id="answer-options"></ul>
+                </div>
+                <div id="feedback-area"></div>
+            </div>
+
+            <div id="navigation-controls">
+                <button id="exit-btn" title="Salir / Configurar"> <i class="fas fa-door-open"></i><span
+                        class="button-text"> Salir</span> </button>
+                <button id="prev-btn" title="Anterior" disabled> <i class="fas fa-arrow-left"></i><span
+                        class="button-text"> Anterior</span> </button>
+                <span id="score-area">Puntuación: <span id="score">0</span> / <span id="total-questions">0</span></span>
+                <button id="next-btn" title="Siguiente" disabled> <i class="fas fa-arrow-right"></i><span
+                        class="button-text"> Siguiente</span> </button>
+            </div>
+
+            <div id="progress-bar-bottom" class="progress-bar-container"></div> <!-- Progress bar bottom -->
+
+
+            <div id="results-area" style="display: none;">
+                <h2>Resultados Finales</h2>
+                <p>Has completado la tanda de preguntas.</p>
+                <p>Resultados: <span id="correct-count">0</span> correctas, <span id="incorrect-count">0</span>
+                    incorrectas.</p>
+                <p>Puntuación final: <span id="final-score">0</span> / <span id="final-total">0</span>.</p>
+                <div id="retry-options">
+                    <button id="retry-failed-btn" title="Reintentar Falladas" style="display: none;"> <i
+                            class="fas fa-redo"></i><span class="button-text"> Reintentar Falladas</span> </button>
+                    <button id="restart-btn" title="Nuevo Examen"> <i class="fas fa-home"></i><span class="button-text">
+                            Configuración</span> </button> 
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="exams/registry.js"></script>
+    <script src="data_loader.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // --- Setup Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const examsListContainer = document.getElementById('exams-list');
+            const selectAllCheckbox = document.getElementById('select-all-exams');
+            const startBtn = document.getElementById('start-btn');
+            const loadingMsg = document.getElementById('loading-exams-msg');
+
+            // 1. Populate Exams List
+            if (window.availableExams && window.availableExams.length > 0) {
+                loadingMsg.style.display = 'none';
+                
+                // Sort by title
+                window.availableExams.sort((a, b) => a.title.localeCompare(b.title));
+
+                window.availableExams.forEach(exam => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" checked> ${exam.title}`;
+                    // Insert before the <br> effectively -> just append helps
+                    examsListContainer.appendChild(label);
+                    examsListContainer.appendChild(document.createElement('br'));
+                });
+            } else {
+                loadingMsg.textContent = "No se encontraron exámenes disponibles en registry.js.";
+                loadingMsg.style.color = "red";
+                startBtn.disabled = true;
+            }
+
+            // 2. Checkbox Logic
+            selectAllCheckbox.addEventListener('change', function () {
+                document.querySelectorAll('.exam-checkbox').forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+
+            examsListContainer.addEventListener('change', function(e) {
+                 if (e.target.classList.contains('exam-checkbox')) {
+                     if (!e.target.checked) {
+                         selectAllCheckbox.checked = false;
+                     } else {
+                         // Check if all are checked
+                         const all = document.querySelectorAll('.exam-checkbox');
+                         const allChecked = Array.from(all).every(cb => cb.checked);
+                         selectAllCheckbox.checked = allChecked;
+                     }
+                 }
+            });
+
+            // 3. Start Button Logic
+            startBtn.addEventListener('click', () => {
+                const selectedCheckboxes = document.querySelectorAll('.exam-checkbox:checked');
+                const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+                const numQuestionsInput = document.getElementById('num_questions');
+                const numQuestions = parseInt(numQuestionsInput.value, 10);
+
+                const errorP = document.getElementById('setup-error');
+                errorP.style.display = 'none';
+
+                if (selectedIds.length === 0) {
+                    errorP.textContent = "Por favor, selecciona al menos un examen.";
+                    errorP.style.display = 'block';
+                    return;
+                }
+                if (!numQuestions || numQuestions <= 0) {
+                    errorP.textContent = "Por favor, introduce un número válido de preguntas.";
+                    errorP.style.display = 'block';
+                    return;
+                }
+
+                // UI Loading State
+                startBtn.textContent = "Cargando...";
+                startBtn.disabled = true;
+
+                // Load Data
+                window.loadSelectedExams(selectedIds, (mergedData) => {
+                    startBtn.textContent = "Comenzar Examen";
+                    startBtn.disabled = false;
+
+                    if (!mergedData) {
+                        errorP.textContent = "Error al cargar los datos del examen.";
+                        errorP.style.display = 'block';
+                        return;
+                    }
+
+                    // Success! Switch to Quiz Mode
+                    document.getElementById('setup-area').style.display = 'none';
+                    document.getElementById('quiz-container').style.display = 'block';
+                    
+                    document.title = mergedData.Title;
+                    document.getElementById('quiz-title').textContent = mergedData.Title;
+
+                    // Set Globals expected by script.js
+                    window.originalQuestionsData = mergedData;
+                    window.requestedNumQuestions = numQuestions;
+
+                    // Launch Quiz
+                    if (window.initQuiz) {
+                        window.initQuiz(null, numQuestions, false);
+                    } else {
+                        alert("Error: script.js no ha inicializado correctamente.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
