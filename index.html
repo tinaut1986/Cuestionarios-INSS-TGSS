@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma de Exámenes</title>
+    <link rel="icon" type="image/png" href="/intranet/favicon.png">
     <!-- Font Awesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- Shared Global Variables -->
     <script>
         var originalQuestionsData = null;
@@ -25,7 +26,7 @@
         <div id="setup-area">
             <h1>Configuración del Examen</h1>
             <p id="setup-error" class="error" style="display: none;"></p>
-            
+
             <div class="form-group">
                 <label>Selecciona Examen(es):</label>
                 <div class="checkbox-group" id="exams-list">
@@ -97,7 +98,7 @@
                     <button id="retry-failed-btn" title="Reintentar Falladas" style="display: none;"> <i
                             class="fas fa-redo"></i><span class="button-text"> Reintentar Falladas</span> </button>
                     <button id="restart-btn" title="Nuevo Examen"> <i class="fas fa-home"></i><span class="button-text">
-                            Configuración</span> </button> 
+                            Configuración</span> </button>
                 </div>
             </div>
         </div>
@@ -108,7 +109,7 @@
     <script src="exams/registry.js"></script>
     <script src="data_loader.js"></script>
     <script src="script.js"></script>
-    
+
     <script>
         // --- Setup Logic ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -120,7 +121,7 @@
             // 1. Populate Exams List
             if (window.availableExams && window.availableExams.length > 0) {
                 loadingMsg.style.display = 'none';
-                
+
                 // Sort by title
                 window.availableExams.sort((a, b) => a.title.localeCompare(b.title));
 
@@ -144,17 +145,17 @@
                 });
             });
 
-            examsListContainer.addEventListener('change', function(e) {
-                 if (e.target.classList.contains('exam-checkbox')) {
-                     if (!e.target.checked) {
-                         selectAllCheckbox.checked = false;
-                     } else {
-                         // Check if all are checked
-                         const all = document.querySelectorAll('.exam-checkbox');
-                         const allChecked = Array.from(all).every(cb => cb.checked);
-                         selectAllCheckbox.checked = allChecked;
-                     }
-                 }
+            examsListContainer.addEventListener('change', function (e) {
+                if (e.target.classList.contains('exam-checkbox')) {
+                    if (!e.target.checked) {
+                        selectAllCheckbox.checked = false;
+                    } else {
+                        // Check if all are checked
+                        const all = document.querySelectorAll('.exam-checkbox');
+                        const allChecked = Array.from(all).every(cb => cb.checked);
+                        selectAllCheckbox.checked = allChecked;
+                    }
+                }
             });
 
             // 3. Start Button Logic
@@ -196,7 +197,7 @@
                     // Success! Switch to Quiz Mode
                     document.getElementById('setup-area').style.display = 'none';
                     document.getElementById('quiz-container').style.display = 'block';
-                    
+
                     document.title = mergedData.Title;
                     document.getElementById('quiz-title').textContent = mergedData.Title;
 
