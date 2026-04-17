@@ -28,14 +28,23 @@
             <p id="setup-error" class="error" style="display: none;"></p>
 
             <div class="form-group">
+                <label for="typology-select">Tipología de Examen:</label>
+                <select id="typology-select">
+                    <!-- Typologies will be injected here -->
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label>Selecciona Examen(es):</label>
                 <div class="checkbox-group" id="exams-list">
                     <label>
                         <input type="checkbox" id="select-all-exams" checked> <strong>Seleccionar Todos</strong>
                     </label>
                     <hr>
-                    <!-- Checkboxes will be injected here by JS -->
-                    <p id="loading-exams-msg">Cargando lista de exámenes...</p>
+                    <div id="exams-checkboxes">
+                        <!-- Checkboxes will be injected here by JS -->
+                        <p id="loading-exams-msg">Cargando lista de exámenes...</p>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -113,39 +122,65 @@
     <script>
         // --- Setup Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            const examsListContainer = document.getElementById('exams-list');
+            const typologySelect = document.getElementById('typology-select');
+            const examsCheckboxesContainer = document.getElementById('exams-checkboxes');
             const selectAllCheckbox = document.getElementById('select-all-exams');
             const startBtn = document.getElementById('start-btn');
             const loadingMsg = document.getElementById('loading-exams-msg');
 
-            // 1. Populate Exams List
-            if (window.availableExams && window.availableExams.length > 0) {
-                loadingMsg.style.display = 'none';
-
-                // Sort by title
-                window.availableExams.sort((a, b) => a.title.localeCompare(b.title));
-
-                window.availableExams.forEach(exam => {
-                    const label = document.createElement('label');
-                    label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" checked> ${exam.title}`;
-                    // Insert before the <br> effectively -> just append helps
-                    examsListContainer.appendChild(label);
-                    examsListContainer.appendChild(document.createElement('br'));
+            // 1. Populate Typologies
+            if (window.availableTypologies) {
+                window.availableTypologies.forEach(t => {
+                    const option = document.createElement('option');
+                    option.value = t.id;
+                    option.textContent = t.name;
+                    typologySelect.appendChild(option);
                 });
-            } else {
-                loadingMsg.textContent = "No se encontraron exámenes disponibles en registry.js.";
-                loadingMsg.style.color = "red";
-                startBtn.disabled = true;
             }
 
-            // 2. Checkbox Logic
+            // 2. Function to Populate Exams based on Typology
+            function updateExamsList() {
+                const selectedTypology = typologySelect.value;
+                examsCheckboxesContainer.innerHTML = '';
+                
+                const filteredExams = window.availableExams ? window.availableExams.filter(e => e.typology === selectedTypology) : [];
+
+                if (filteredExams.length > 0) {
+                    // Sort by title
+                    filteredExams.sort((a, b) => a.title.localeCompare(b.title));
+
+                    filteredExams.forEach(exam => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" checked> ${exam.title}`;
+                        examsCheckboxesContainer.appendChild(label);
+                        examsCheckboxesContainer.appendChild(document.createElement('br'));
+                    });
+                    
+                    selectAllCheckbox.checked = true;
+                    selectAllCheckbox.disabled = false;
+                    startBtn.disabled = false;
+                } else {
+                    examsCheckboxesContainer.innerHTML = '<p style="color: #666; font-style: italic; margin-top: 10px;">No hay exámenes disponibles para esta tipología.</p>';
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.disabled = true;
+                    startBtn.disabled = true;
+                }
+            }
+
+            // Initial population
+            updateExamsList();
+
+            // Handle Typology Change
+            typologySelect.addEventListener('change', updateExamsList);
+
+            // 3. Checkbox Logic
             selectAllCheckbox.addEventListener('change', function () {
                 document.querySelectorAll('.exam-checkbox').forEach(checkbox => {
                     checkbox.checked = this.checked;
                 });
             });
 
-            examsListContainer.addEventListener('change', function (e) {
+            document.getElementById('exams-list').addEventListener('change', function (e) {
                 if (e.target.classList.contains('exam-checkbox')) {
                     if (!e.target.checked) {
                         selectAllCheckbox.checked = false;
@@ -158,7 +193,7 @@
                 }
             });
 
-            // 3. Start Button Logic
+            // 4. Start Button Logic
             startBtn.addEventListener('click', () => {
                 const selectedCheckboxes = document.querySelectorAll('.exam-checkbox:checked');
                 const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);

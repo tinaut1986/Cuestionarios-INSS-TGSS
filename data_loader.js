@@ -31,13 +31,21 @@ window.loadSelectedExams = function (selectedIds, callback) {
     };
 
     selectedIds.forEach(id => {
+        // Find exam metadata in registry
+        const examMeta = window.availableExams.find(e => e.id === id);
+        if (!examMeta) {
+            console.error("Exam metadata not found for ID:", id);
+            checkDone();
+            return;
+        }
+
         // Check if already loaded
         if (window.loadedExamsData[id]) {
             checkDone();
         } else {
             // Load script dynamically
             const script = document.createElement('script');
-            script.src = 'exams/' + id + '.js';
+            script.src = examMeta.filename;
             script.onload = checkDone;
             script.onerror = () => {
                 console.error("Failed to load exam script for:", id);
