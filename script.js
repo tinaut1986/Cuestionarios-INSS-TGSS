@@ -1,4 +1,9 @@
 /**
+ * Aplicación de Exámenes - Versión 1.3.1
+ */
+const APP_VERSION = '1.3.1';
+
+/**
  * Convierte un string con saltos de línea (especialmente dobles saltos)
  * en párrafos HTML (<p>).
  * @param {string} text El texto de entrada con \n.
@@ -68,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const darkModeBtn = document.getElementById('dark-mode-btn');
     const maximizeBtn = document.getElementById('maximize-btn');
     const langSelect = document.getElementById('lang-select');
+    const versionNumberDisplay = document.getElementById('version-number');
 
     // --- State Variables ---
     let allOriginalQuestionsFlat = []; // Holds the FLATTENED, ordered list from the new JSON structure
@@ -766,6 +772,9 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
         }
     });
+
+    // Set version number
+    if (versionNumberDisplay) versionNumberDisplay.textContent = APP_VERSION;
 
     // Start everything
     initSetup();

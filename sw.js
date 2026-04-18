@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exam-platform-v1';
+const CACHE_NAME = 'exam-platform-v1.3.1';
 const ASSETS = [
     './',
     './index.html',

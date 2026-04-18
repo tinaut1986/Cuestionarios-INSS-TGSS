@@ -660,7 +660,19 @@ input[type="number"]::-webkit-outer-spin-button {
     margin: 0;
     font-size: 1.4rem;
     color: var(--primary-color);
-    text-align: left;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.header-version {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+    margin-top: -2px;
 }
 
 #quiz-header h1 {
@@ -752,7 +764,11 @@ input[type="number"]::-webkit-outer-spin-button {
     }
 
     #main-title {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    .header-version {
+        font-size: 0.6rem;
     }
 
     /* === SETUP AREA: push below fixed header === */
