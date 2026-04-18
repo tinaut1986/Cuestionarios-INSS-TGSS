@@ -11,6 +11,7 @@
     --primary-color: #007bff;
     --primary-hover: #0056b3;
     --secondary-color: #6c757d;
+    --secondary-hover: #5a6268;
     --success-color: #28a745;
     --error-color: #dc3545;
     --context-bg: #eef;
@@ -19,6 +20,10 @@
     --context-specific-bg: #efe;
     --context-specific-border: #aea;
     --context-specific-title: #353;
+    --progress-bg: #d0d0d0;
+    --progress-border: #bbb;
+    --disabled-bg: #ddd;
+    --disabled-text: #888;
 }
 
 body.dark-mode {
@@ -34,6 +39,7 @@ body.dark-mode {
     --primary-color: #3794ff;
     --primary-hover: #50a2ff;
     --secondary-color: #4a4a4a;
+    --secondary-hover: #5a5a5a;
     --success-color: #2ea44f;
     --error-color: #cf222e;
     --context-bg: #1a1a2e;
@@ -42,6 +48,10 @@ body.dark-mode {
     --context-specific-bg: #1a2e1a;
     --context-specific-border: #305a30;
     --context-specific-title: #a0ffa0;
+    --progress-bg: #333;
+    --progress-border: #444;
+    --disabled-bg: #2a2a2a;
+    --disabled-text: #666;
 }
 
 body {
@@ -357,8 +367,8 @@ input[type="number"]::-webkit-outer-spin-button {
     flex-grow: 1;
     min-width: 20px;
     height: 10px;
-    background-color: #d0d0d0;
-    border: 1px solid #bbb;
+    background-color: var(--progress-bg);
+    border: 1px solid var(--progress-border);
     border-radius: 3px;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -383,8 +393,8 @@ input[type="number"]::-webkit-outer-spin-button {
     min-width: 20px;
     height: 10px;
     /* Default: unanswered */
-    background-color: #d0d0d0;
-    border: 1px solid #bbb;
+    background-color: var(--progress-bg);
+    border: 1px solid var(--progress-border);
     border-radius: 3px;
     /* Indicate clickability */
     cursor: pointer;
@@ -430,7 +440,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 #navigation-controls button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -459,21 +469,22 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #navigation-controls button:disabled {
-    background-color: #ccc;
+    background-color: var(--disabled-bg);
+    color: var(--disabled-text);
     cursor: not-allowed;
 }
 
 #navigation-controls button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
 }
 
 #prev-btn {
     /* Gray */
-    background-color: #6c757d;
+    background-color: var(--secondary-color);
 }
 
 #prev-btn:hover:not(:disabled) {
-    background-color: #5a6268;
+    background-color: var(--secondary-hover);
 }
 
 
@@ -574,7 +585,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .checkbox-group label:hover {
-    background-color: #f0f0f0;
+    background-color: var(--item-hover);
 }
 
 .checkbox-group hr {
@@ -660,6 +671,7 @@ input[type="number"]::-webkit-outer-spin-button {
 #utility-buttons {
     display: flex;
     gap: 10px;
+    margin-left: auto;
 }
 
 #utility-buttons button {
