@@ -79,7 +79,7 @@ function mergeAndProceed(selectedIds, callback) {
     });
 
     if (mergedParts.length === 0) {
-        alert("No se encontraron preguntas válidas en los exámenes seleccionados.");
+        alert(t('no_valid_questions'));
         return;
     }
 
@@ -88,11 +88,12 @@ function mergeAndProceed(selectedIds, callback) {
         finalTitle = titles.join(' + ');
     }
     if (titles.length > 3) {
-        finalTitle = titles.length + " Exámenes Seleccionados";
+        finalTitle = t('exams_selected', { count: titles.length });
     }
 
     const finalData = {
         Title: finalTitle,
+        SourceTitles: titles,
         ExamParts: mergedParts
     };
 

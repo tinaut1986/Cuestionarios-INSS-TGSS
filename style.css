@@ -672,6 +672,26 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     gap: 10px;
     margin-left: auto;
+    align-items: center;
+}
+
+#lang-select {
+    padding: 8px 12px;
+    border-radius: 20px;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+#lang-select:hover {
+    background-color: var(--secondary-hover);
 }
 
 #utility-buttons button {

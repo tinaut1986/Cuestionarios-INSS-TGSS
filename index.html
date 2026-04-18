@@ -30,6 +30,10 @@
             <div id="header-top-bar">
                 <h1 id="main-title">Plataforma de Exámenes</h1>
                 <div id="utility-buttons">
+                    <select id="lang-select" title="Seleccionar Idioma">
+                        <option value="es">ES</option>
+                        <option value="ca">CA</option>
+                    </select>
                     <button id="dark-mode-btn" title="Modo Claro/Oscuro"><i class="fas fa-moon"></i></button>
                     <button id="maximize-btn" title="Pantalla Completa"><i class="fas fa-expand"></i></button>
                 </div>
@@ -49,10 +53,11 @@
             </div>
 
             <div class="form-group">
-                <label>Selecciona Examen(es):</label>
+                <label id="select-exams-label">Selecciona Examen(es):</label>
                 <div class="checkbox-group" id="exams-list">
                     <label>
-                        <input type="checkbox" id="select-all-exams" checked> <strong>Seleccionar Todos</strong>
+                        <input type="checkbox" id="select-all-exams" checked> <strong id="select-all-text">Seleccionar
+                            Todos</strong>
                     </label>
                     <hr>
                     <div id="exams-checkboxes">
@@ -62,9 +67,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="num_questions">Número de preguntas a mostrar:</label>
+                <label for="num_questions" id="num-questions-label">Número de preguntas a mostrar:</label>
                 <input type="number" id="num_questions" min="1" value="10" required>
-                <small>(Se seleccionarán aleatoriamente de todos los exámenes elegidos)</small>
+                <small id="num-questions-small">(Se seleccionarán aleatoriamente de todos los exámenes elegidos)</small>
             </div>
             <button id="start-btn" class="start-btn">Comenzar Examen</button>
         </div>
@@ -143,147 +148,14 @@
         </div>
     </div>
 
+    <script src="lang/es.js"></script>
+    <script src="lang/ca.js"></script>
+    <script src="lang/i18n_helper.js"></script>
     <script src="exams/registry.js"></script>
     <script src="data_loader.js"></script>
     <script src="script.js"></script>
 
     <script>
-        // --- Setup Logic ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const setupArea = document.getElementById('setup-area');
-            const quizContainer = document.getElementById('quiz-container');
-            const mainTitle = document.getElementById('main-title');
-            const quizTitle = document.getElementById('quiz-title');
-            const typologySelect = document.getElementById('typology-select');
-            const examsCheckboxesContainer = document.getElementById('exams-checkboxes');
-            const selectAllCheckbox = document.getElementById('select-all-exams');
-            const startBtn = document.getElementById('start-btn');
-            const loadingMsg = document.getElementById('loading-exams-msg');
-
-            // 1. Populate Typologies
-            if (window.availableTypologies) {
-                window.availableTypologies.forEach(t => {
-                    const option = document.createElement('option');
-                    option.value = t.id;
-                    option.textContent = t.name;
-                    typologySelect.appendChild(option);
-                });
-            }
-
-            // 2. Function to Populate Exams based on Typology
-            function updateExamsList() {
-                const selectedTypology = typologySelect.value;
-                examsCheckboxesContainer.innerHTML = '';
-
-                const filteredExams = window.availableExams ? window.availableExams.filter(e => e.typology === selectedTypology) : [];
-
-                if (filteredExams.length > 0) {
-                    // Sort by title
-                    filteredExams.sort((a, b) => a.title.localeCompare(b.title));
-
-                    filteredExams.forEach(exam => {
-                        const label = document.createElement('label');
-                        label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" checked> ${exam.title}`;
-                        examsCheckboxesContainer.appendChild(label);
-                    });
-
-                    selectAllCheckbox.checked = true;
-                    selectAllCheckbox.disabled = false;
-                    startBtn.disabled = false;
-                } else {
-                    examsCheckboxesContainer.innerHTML = '<p style="color: #666; font-style: italic; margin-top: 10px;">No hay exámenes disponibles para esta tipología.</p>';
-                    selectAllCheckbox.checked = false;
-                    selectAllCheckbox.disabled = true;
-                    startBtn.disabled = true;
-                }
-            }
-
-            // Initial population
-            updateExamsList();
-
-            // Handle Typology Change
-            typologySelect.addEventListener('change', updateExamsList);
-
-            // 3. Checkbox Logic
-            selectAllCheckbox.addEventListener('change', function () {
-                document.querySelectorAll('.exam-checkbox').forEach(checkbox => {
-                    checkbox.checked = this.checked;
-                });
-            });
-
-            document.getElementById('exams-list').addEventListener('change', function (e) {
-                if (e.target.classList.contains('exam-checkbox')) {
-                    if (!e.target.checked) {
-                        selectAllCheckbox.checked = false;
-                    } else {
-                        // Check if all are checked
-                        const all = document.querySelectorAll('.exam-checkbox');
-                        const allChecked = Array.from(all).every(cb => cb.checked);
-                        selectAllCheckbox.checked = allChecked;
-                    }
-                }
-            });
-
-            // 4. Start Button Logic
-            startBtn.addEventListener('click', () => {
-                const selectedCheckboxes = document.querySelectorAll('.exam-checkbox:checked');
-                const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
-                const numQuestionsInput = document.getElementById('num_questions');
-                const numQuestions = parseInt(numQuestionsInput.value, 10);
-
-                const errorP = document.getElementById('setup-error');
-                errorP.style.display = 'none';
-
-                if (selectedIds.length === 0) {
-                    errorP.textContent = "Por favor, selecciona al menos un examen.";
-                    errorP.style.display = 'block';
-                    return;
-                }
-                if (!numQuestions || numQuestions <= 0) {
-                    errorP.textContent = "Por favor, introduce un número válido de preguntas.";
-                    errorP.style.display = 'block';
-                    return;
-                }
-
-                // UI Loading State
-                startBtn.textContent = "Cargando...";
-                startBtn.disabled = true;
-
-                // Load Data
-                window.loadSelectedExams(selectedIds, (mergedData) => {
-                    startBtn.textContent = "Comenzar Examen";
-                    startBtn.disabled = false;
-
-                    if (!mergedData) {
-                        errorP.textContent = "Error al cargar los datos del examen.";
-                        errorP.style.display = 'block';
-                        return;
-                    }
-
-                    // Success! Switch to Quiz Mode
-                    setupArea.style.display = 'none';
-                    quizContainer.style.display = 'block';
-
-                    if (mainTitle) mainTitle.style.display = 'none'; // Hide main title to save space
-                    if (quizTitle) {
-                        document.title = mergedData.Title;
-                        quizTitle.textContent = mergedData.Title;
-                    }
-
-                    // Set Globals expected by script.js
-                    window.originalQuestionsData = mergedData;
-                    window.requestedNumQuestions = numQuestions;
-
-                    // Launch Quiz
-                    if (window.initQuiz) {
-                        window.initQuiz(null, numQuestions, false);
-                    } else {
-                        alert("Error: script.js no ha inicializado correctamente.");
-                    }
-                });
-            });
-        });
-
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
