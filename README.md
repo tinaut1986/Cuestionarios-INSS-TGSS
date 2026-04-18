@@ -15,13 +15,13 @@ Diseñada para funcionar directamente desde el navegador, sin necesidad de servi
 
 ---
 
-## 🧠 Temario Cubierto (Convocatorias 2021-2024)
+## 🧠 Temario Cubierto (Convocatorias 2021-2026)
 
-Este repositorio incluye preguntas basadas en convocatorias recientes de acceso libre y promoción interna.
+Este repositorio incluye preguntas basadas en convocatorias recientes de acceso libre y promoción interna para la Seguridad Social, así como convocatorias de administración local.
 
 **Nota:** El cuestionario "EJERCICIO PRUEBA SEGURIDAD SOCIAL (Generado por IA)" se incluye como material de práctica adicional y no corresponde a una convocatoria oficial.
 
-### 1. Sistema de la Seguridad Social
+### 1. Sistema de la Seguridad Social (Typology: SS)
 * **Ley General de la Seguridad Social (TRLGSS):** Afiliación, inscripción, altas, bajas y cotización.
 * **Gestión Recaudatoria:** Recargos, aplazamientos, intereses de demora y el Procedimiento de Apremio (Reglamento General de Recaudación, Real Decreto 1415/2004).
 * **Prestaciones Contributivas:**
@@ -32,14 +32,20 @@ Este repositorio incluye preguntas basadas en convocatorias recientes de acceso 
 * **Prestaciones No Contributivas** (Invalidez, Jubilación e Ingreso Mínimo Vital).
 * **Regímenes Especiales:** Trabajadores por Cuenta Propia o **Autónomos (RETA)** y del Mar.
 
-### 2. Derecho Constitucional y Administrativo
+### 2. Administración Local (Typology: CBS GIRONÈS-SALT)
+* **Consorci de Benestar Social Gironès-Salt:** Estatutos y funcionamiento.
+* **Derecho Autonómico:** Transparencia (Llei 19/2014) y régimen jurídico de Cataluña.
+* **Gestión de RRHH:** Oferta pública, bolsas de trabajo, RLT y plantillas.
+* **Derecho Laboral y Función Pública:** EBEP, contratos de trabajo y personal laboral.
+
+### 3. Derecho Constitucional y Administrativo
 * **Constitución Española (CE):** Derechos fundamentales (Art. 23, 41), La Corona, Las Cortes Generales, El Gobierno y sus órganos, y el Tribunal Constitucional.
 * **Procedimiento Administrativo Común (Ley 39/2015):** Derechos de los interesados, actos administrativos (nulidad y anulabilidad), notificaciones y recursos administrativos (alzada).
 * **Régimen Jurídico del Sector Público (Ley 40/2015):** Organización Central del Estado.
 * **Función Pública:** Estatuto Básico del Empleado Público (TREBEP).
 * **Otras Normas:** Protección de Datos, Ley de Igualdad y Ley LGTBI.
 
-### 3. Derecho de la Unión Europea
+### 4. Derecho de la Unión Europea
 * **Normativa Comunitaria:** Reglamentos 883/2004 y 987/2009 (Coordinación de la Seguridad Social).
 
 ---
