@@ -698,6 +698,14 @@ input[type="number"]::-webkit-outer-spin-button {
         box-shadow: none;
     }
 
+    /* === DYNAMIC OFFSETS FOR SAFE AREAS === */
+    :root {
+        --safe-top: env(safe-area-inset-top, 0px);
+        /* Base header height is 56px (8px top + 40px button + 8px bottom).
+           When safe-top > 8px, it grows accordingly. */
+        --header-height: calc(max(8px, var(--safe-top)) + 48px);
+    }
+
     /* === GLOBAL HEADER: fixed at top, respects camera notch === */
     #global-header {
         position: fixed;
@@ -706,7 +714,7 @@ input[type="number"]::-webkit-outer-spin-button {
         right: 0;
         z-index: 200;
         padding: 8px 15px;
-        padding-top: max(8px, env(safe-area-inset-top));
+        padding-top: max(8px, var(--safe-top));
         border-bottom: 1px solid var(--border-color);
         background: var(--container-bg);
     }
@@ -718,7 +726,7 @@ input[type="number"]::-webkit-outer-spin-button {
     /* === SETUP AREA: push below fixed header === */
     #setup-area {
         padding: 15px;
-        padding-top: calc(60px + 15px);
+        padding-top: calc(var(--header-height) + 15px);
         margin-bottom: 0;
         border-radius: 0;
         border: none;
@@ -753,14 +761,14 @@ input[type="number"]::-webkit-outer-spin-button {
     /* === QUIZ CONTAINER: push below fixed global-header === */
     #quiz-container {
         min-height: 100vh;
-        padding-top: 55px;
+        padding-top: var(--header-height);
         box-sizing: border-box;
     }
 
-    /* === QUIZ HEADER (title + progress): fixed below global header === */
+    /* === QUIZ HEADER (title + progress): sticky below global header === */
     #quiz-header {
-        position: fixed;
-        top: 55px;
+        position: sticky;
+        top: var(--header-height);
         left: 0;
         right: 0;
         z-index: 199;
@@ -780,11 +788,11 @@ input[type="number"]::-webkit-outer-spin-button {
         padding: 5px;
     }
 
-    /* === QUIZ AREA: natural body scroll === */
+    /* === QUIZ AREA: follows sticky header naturally === */
     #quiz-area {
-        padding: 15px;
-        padding-top: calc(55px + 85px + 10px);
-        padding-bottom: calc(70px + 15px);
+        padding: 10px 15px;
+        padding-top: 0;
+        padding-bottom: calc(70px + 15px + env(safe-area-inset-bottom, 0px));
         box-sizing: border-box;
         margin-bottom: 0;
     }
@@ -798,6 +806,7 @@ input[type="number"]::-webkit-outer-spin-button {
         z-index: 200;
         background: var(--container-bg);
         padding: 10px 15px;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
         border-top: 1px solid var(--border-color);
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
         margin-top: 0;
@@ -830,6 +839,7 @@ input[type="number"]::-webkit-outer-spin-button {
         margin-right: 5px;
     }
 }
+
 /* ============================================================
    Custom Modal Dialog
    ============================================================ */
@@ -862,8 +872,15 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 @keyframes modal-pop {
-    from { transform: scale(0.85); opacity: 0; }
-    to   { transform: scale(1);    opacity: 1; }
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 #exit-modal-box h2 {
