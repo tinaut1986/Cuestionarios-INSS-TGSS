@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const sourceDisplay = document.getElementById('question-source-display');
             if (sourceDisplay && currentQuestion && currentQuestion.sourceTitle) {
-                sourceDisplay.textContent = `(${t('origen')}: ${currentQuestion.sourceTitle})`;
+                sourceDisplay.textContent = `(${t('origen')}: ${getTranslatedText(currentQuestion.sourceTitle)})`;
             }
 
             const currentPartTitleElem = document.querySelector('#current-question-area h2');
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateQuizTitle(data) {
         if (!data || !quizTitle) return;
-        const titles = data.SourceTitles || [];
+        const titles = (data.SourceTitles || []).map(t => getTranslatedText(t));
         let finalTitle = titles.length > 0 ? titles[0] : t('quiz_title');
 
         if (titles.length > 1) {
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const label = document.createElement('label');
                     const isChecked = savedExams.length === 0 || savedExams.includes(exam.id);
                     const langTag = exam.lang ? `[${exam.lang.toUpperCase()}] ` : '';
-                    label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" ${isChecked ? 'checked' : ''}> ${langTag}${exam.title}`;
+                    label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" ${isChecked ? 'checked' : ''}> ${langTag}${getTranslatedText(exam.title)}`;
                     examsCheckboxesContainer.appendChild(label);
                 });
 
@@ -512,15 +512,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const sourceDisplay = document.getElementById('question-source-display');
         if (sourceDisplay && currentQuestion.sourceTitle) {
-            sourceDisplay.textContent = `(${t('origen')}: ${currentQuestion.sourceTitle})`;
+            sourceDisplay.textContent = `(${t('origen')}: ${getTranslatedText(currentQuestion.sourceTitle)})`;
             sourceDisplay.style.display = 'inline-block';
         } else if (sourceDisplay) {
             sourceDisplay.style.display = 'none';
         }
 
-        questionStatement.innerHTML = formatTextAsParagraphs(currentQuestion.Statement || 'Pregunta no disponible');
+        questionStatement.innerHTML = formatTextAsParagraphs(getTranslatedText(currentQuestion.Statement) || 'Pregunta no disponible');
         displayExtraStatements(currentQuestion);
-        displayCurrentExtraStatement(currentQuestion.ExtraStatement);
+        displayCurrentExtraStatement(getTranslatedText(currentQuestion.ExtraStatement));
 
         const currentPartTitleElem = document.querySelector('#current-question-area h2');
         if (currentPartTitleElem) currentPartTitleElem.textContent = t('pregunta_label');
@@ -540,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             shuffledAnswers.forEach((answer, shuffledIdx) => {
                 const li = document.createElement('li');
                 const displayLabel = optionLabels[shuffledIdx];
-                li.innerHTML = `<b>${displayLabel})</b> ${(answer.Text || '').replace(/\n/g, '<br>')}`;
+                li.innerHTML = `<b>${displayLabel})</b> ${(getTranslatedText(answer.Text) || '').replace(/\n/g, '<br>')}`;
                 li.dataset.shuffledIndex = shuffledIdx;
 
                 if (wasAnswered) {
@@ -593,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (q.absoluteOriginalIndex >= currentIndex) break;
             if (q.sourceFile === currentSource && q.PartTitle === currentPart && q.ExtraStatement) {
                 const div = document.createElement('div');
-                div.innerHTML = q.ExtraStatement;
+                div.innerHTML = getTranslatedText(q.ExtraStatement);
                 extraStatementsContent.appendChild(div);
                 found = true;
             }
@@ -602,8 +602,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayCurrentExtraStatement(extraStatement) {
-        if (extraStatement && extraStatement.trim() !== '') {
-            currentExtraStatementContent.innerHTML = formatTextAsParagraphs(extraStatement);
+        if (extraStatement && (typeof extraStatement === 'string' ? extraStatement.trim() !== '' : true)) {
+            currentExtraStatementContent.innerHTML = formatTextAsParagraphs(getTranslatedText(extraStatement));
             currentExtraStatementArea.style.display = 'block';
         } else {
             currentExtraStatementArea.style.display = 'none';

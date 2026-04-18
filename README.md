@@ -1,4 +1,4 @@
-# Cuestionarios-INSS-TGSS
+﻿# Cuestionarios-INSS-TGSS
 
 Una plataforma web ligera y estática para realizar tests de oposiciones de forma local y gratuita, centrada en el temario común de la Administración del Estado, con foco principal en la Seguridad Social.
 Diseñada para funcionar directamente desde el navegador, sin necesidad de servidores, bases de datos ni conexión a internet.
@@ -61,6 +61,47 @@ Este repositorio incluye preguntas basadas en convocatorias recientes de acceso 
 * `exams/`: Carpeta con los archivos de examen (`.js`).
 * `script.js`: Lógica del examen (JavaScript).
 * `style.css`: Estilos visuales.
+* `lang/`: Archivos de traducción de la interfaz (ES/CA).
+
+---
+
+## 🌍 Traducción de Exámenes
+
+La plataforma admite exámenes multilingües. Para que un examen se vea en el idioma seleccionado por el usuario, los campos de texto del archivo `.js` del examen deben convertirse en objetos en lugar de strings simples.
+
+### Estructura para Traducción
+
+Si quieres traducir un examen, cambia los strings por un objeto con las claves `es` (español) y `ca` (catalán):
+
+```javascript
+window.registerExam('id_del_examen', {
+    "Title": {
+        "es": "Título en Español",
+        "ca": "Títol en Català"
+    },
+    // ...
+    "ExamParts": [
+        {
+            "Title": { "es": "Parte Única", "ca": "Part Única" },
+            "Questions": [
+                {
+                    "Statement": {
+                        "es": "¿Cuál es...?",
+                        "ca": "Quina és...?"
+                    },
+                    "Answers": [
+                        { "Text": { "es": "Opción A", "ca": "Opció A" }, "IsCorrect": true },
+                        // ...
+                    ]
+                }
+            ]
+        }
+    ]
+});
+```
+
+*   **Idioma por defecto:** Si el idioma seleccionado por el usuario no existe en el objeto, la plataforma mostrará el español (`es`) por defecto. Si el español tampoco está disponible, mostrará el primer idioma que encuentre en el objeto.
+*   **Compatibilidad:** Los exámenes antiguos que usan strings simples seguirán funcionando correctamente en su idioma original (sin traducción).
 
 ---
 *Este repositorio es una herramienta de estudio gratuita y no tiene afiliación oficial con ningún organismo público.*

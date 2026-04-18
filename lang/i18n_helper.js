@@ -12,4 +12,23 @@
         }
         return text;
     };
+
+    /**
+     * Devuelve el texto traducido si es un objeto {es: "...", ca: "..."}
+     * o el propio string si ya es una cadena.
+     * @param {string|object} textObj 
+     * @returns {string}
+     */
+    window.getTranslatedText = function (textObj) {
+        if (!textObj) return '';
+        if (typeof textObj === 'string') return textObj;
+
+        const lang = window.currentLang || 'es';
+        if (textObj[lang]) return textObj[lang];
+
+        // Fallback: Español, si no el primer idioma disponible, si no cadena vacía
+        if (textObj['es']) return textObj['es'];
+        const firstKey = Object.keys(textObj)[0];
+        return firstKey ? textObj[firstKey] : '';
+    };
 })();
