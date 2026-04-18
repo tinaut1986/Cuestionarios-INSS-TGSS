@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const restartBtn = document.getElementById('restart-btn'); // Goes back to setup
     const progressBarBottom = document.getElementById('progress-bar-bottom');
     const exitBtn = document.getElementById('exit-btn');
+    const darkModeBtn = document.getElementById('dark-mode-btn');
+    const maximizeBtn = document.getElementById('maximize-btn');
 
     // --- State Variables ---
     let allOriginalQuestionsFlat = []; // Holds the FLATTENED, ordered list from the new JSON structure
@@ -122,9 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         exitBtn.addEventListener('click', () => {
-            if (confirm("¿Estás seguro de que quieres salir y volver a la configuración? Perderás el progreso actual.")) {
-                window.location.reload(); // Reload to go back to setup
-            }
+            showExitModal();
         });
 
 
@@ -630,7 +630,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    // --- Dark Mode Logic ---
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        updateDarkModeIcon();
+    }
+
+    if (darkModeBtn) {
+        darkModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateDarkModeIcon();
+        });
+    }
+
+    function updateDarkModeIcon() {
+        if (!darkModeBtn) return;
+        const icon = darkModeBtn.querySelector('i');
+        if (document.body.classList.contains('dark-mode')) {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    }
+
+    // --- Maximize Logic ---
+    if (maximizeBtn) {
+        maximizeBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+                maximizeBtn.querySelector('i').classList.remove('fa-expand');
+                maximizeBtn.querySelector('i').classList.add('fa-compress');
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    maximizeBtn.querySelector('i').classList.remove('fa-compress');
+                    maximizeBtn.querySelector('i').classList.add('fa-expand');
+                }
+            }
+        });
+    }
+
+    // Update maximize icon if user exits fullscreen via ESC
+    document.addEventListener('fullscreenchange', () => {
+        if (maximizeBtn) {
+            const icon = maximizeBtn.querySelector('i');
+            if (document.fullscreenElement) {
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            } else {
+                icon.classList.remove('fa-compress');
+                icon.classList.add('fa-expand');
+            }
+        }
+    });
+
+
     // --- Start the Quiz ---
     // In static mode, this is handled by index.html calling window.launchQuiz or similar.
     // We do NOT auto-start here anymore.
 });
+// Injected: Exit Modal Logic & Fullscreen Restore
+(function() {
+    function initExitModal() {
+        var exitModal = document.getElementById('exit-modal');
+        var exitModalCancel = document.getElementById('exit-modal-cancel');
+        var exitModalConfirm = document.getElementById('exit-modal-confirm');
+        var maximizeBtn = document.getElementById('maximize-btn');
+
+        window.showExitModal = function() {
+            if (exitModal) exitModal.classList.add('visible');
+        };
+
+        function hideExitModal() {
+            if (exitModal) exitModal.classList.remove('visible');
+        }
+
+        if (exitModalCancel) {
+            exitModalCancel.addEventListener('click', hideExitModal);
+        }
+
+        if (exitModal) {
+            exitModal.addEventListener('click', function(e) {
+                if (e.target === exitModal) hideExitModal();
+            });
+        }
+
+        if (exitModalConfirm) {
+            exitModalConfirm.addEventListener('click', function() {
+                hideExitModal();
+                if (document.fullscreenElement) {
+                    sessionStorage.setItem('restoreFullscreen', '1');
+                }
+                window.location.reload();
+            });
+        }
+
+        // Restore fullscreen after reload
+        if (sessionStorage.getItem('restoreFullscreen') === '1') {
+            sessionStorage.removeItem('restoreFullscreen');
+            document.documentElement.requestFullscreen().catch(function() {});
+            if (maximizeBtn) {
+                var icon = maximizeBtn.querySelector('i');
+                icon.classList.remove('fa-expand');
+                icon.classList.add('fa-compress');
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initExitModal);
+})();
