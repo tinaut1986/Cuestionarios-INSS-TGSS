@@ -83,11 +83,12 @@ function mergeAndProceed(selectedIds, callback) {
         return;
     }
 
-    let finalTitle = titles.length > 0 ? titles[0] : "Examen";
-    if (titles.length > 1) {
-        finalTitle = titles.join(' + ');
+    const translatedTitles = titles.map(t => getTranslatedText(t) || "Examen");
+    let finalTitle = translatedTitles.length > 0 ? translatedTitles[0] : "Examen";
+    if (translatedTitles.length > 1) {
+        finalTitle = translatedTitles.join(' + ');
     }
-    if (titles.length > 3) {
+    if (translatedTitles.length > 3) {
         finalTitle = t('exams_selected', { count: titles.length });
     }
 

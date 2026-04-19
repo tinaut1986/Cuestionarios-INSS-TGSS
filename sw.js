@@ -1,11 +1,11 @@
-const CACHE_NAME = 'exam-platform-v1.3.1';
+const CACHE_NAME = 'exam-platform-v1.3.2';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
     './script.js',
     './data_loader.js',
-    './exams/registry.js',
+    './get_exams.php',
     './icon.png',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
 ];

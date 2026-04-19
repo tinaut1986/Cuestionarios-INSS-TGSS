@@ -1,7 +1,7 @@
 /**
- * Aplicación de Exámenes - Versión 1.3.1
+ * Aplicación de Exámenes - Versión 1.3.2
  */
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.3.2';
 
 /**
  * Convierte un string con saltos de línea (especialmente dobles saltos)
@@ -188,12 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateQuizTitle(window.originalQuestionsData);
             }
 
-            // Re-check feedback if answered
-            const currentAnswerState = userAnswers[currentSessionIndex];
-            if (currentAnswerState && currentAnswerState.selectedShuffledIndex !== null) {
-                const correctAnswer = currentQuestion.Answers.find(a => a.IsCorrect === true);
-                const correctLetter = correctAnswer ? correctAnswer.Option.toUpperCase() : '??';
-                feedbackArea.textContent = currentAnswerState.isCorrect ? t('correcto_feedback') : t('incorrecto_feedback', { letter: correctLetter });
+            // Refresh the current question content to update language of statement and answers
+            if (sessionQuestions.length > 0 && currentSessionIndex >= 0) {
+                loadQuestion(currentSessionIndex);
             }
 
             updateNavigationButtons();
@@ -237,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.availableTypologies.forEach(tobj => {
                 const option = document.createElement('option');
                 option.value = tobj.id;
-                option.textContent = currentLang === 'ca' && tobj.name_ca ? tobj.name_ca : tobj.name;
+                option.textContent = window.currentLang === 'ca' && tobj.name_ca ? tobj.name_ca : tobj.name;
                 typologySelect.appendChild(option);
             });
         }
@@ -259,14 +256,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (filteredExams.length > 0) {
                 // Sort by title
-                filteredExams.sort((a, b) => a.title.localeCompare(b.title));
+                filteredExams.sort((a, b) => getTranslatedText(a.title).localeCompare(getTranslatedText(b.title)));
 
                 const savedExams = JSON.parse(localStorage.getItem('lastSelectedExams') || '[]');
 
                 filteredExams.forEach(exam => {
                     const label = document.createElement('label');
                     const isChecked = savedExams.length === 0 || savedExams.includes(exam.id);
-                    const langTag = exam.lang ? `[${exam.lang.toUpperCase()}] ` : '';
+                    
+                    // Intelligent language tag: Show what the user will actually get
+                    let effectiveLang = 'es'; // Fallback
+                    if (exam.lang) {
+                        const availableLangs = exam.lang.split('/');
+                        if (availableLangs.includes(window.currentLang)) {
+                            effectiveLang = window.currentLang;
+                        } else {
+                            effectiveLang = availableLangs[0];
+                        }
+                    }
+                    const langTag = `[${effectiveLang.toUpperCase()}] `;
+
                     label.innerHTML = `<input type="checkbox" class="exam-checkbox" value="${exam.id}" ${isChecked ? 'checked' : ''}> ${langTag}${getTranslatedText(exam.title)}`;
                     examsCheckboxesContainer.appendChild(label);
                 });
@@ -539,7 +548,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         answerOptionsList.innerHTML = '';
         if (currentQuestion.Answers && Array.isArray(currentQuestion.Answers)) {
-            const shuffledAnswers = shuffleArray([...currentQuestion.Answers]);
+            // Use existing shuffled answers if available to avoid reshuffling on language change
+            if (!currentQuestion.shuffledAnswers) {
+                currentQuestion.shuffledAnswers = shuffleArray([...currentQuestion.Answers]);
+            }
+            const shuffledAnswers = currentQuestion.shuffledAnswers;
             const optionLabels = ['A', 'B', 'C', 'D'];
             const wasAnswered = currentAnswerState.selectedShuffledIndex !== null;
 
