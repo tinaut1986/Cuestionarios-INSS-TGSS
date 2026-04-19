@@ -24,6 +24,12 @@
     --progress-border: #bbb;
     --disabled-bg: #ddd;
     --disabled-text: #888;
+    /* Layout Variables */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --header-height: calc(max(8px, var(--safe-top)) + 50px);
+    --footer-height: calc(max(10px, var(--safe-bottom)) + 65px);
+    --content-max-width: 800px;
 }
 
 body.dark-mode {
@@ -58,19 +64,20 @@ body {
     font-family: sans-serif;
     line-height: 1.6;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 800px;
-    margin: auto;
+    width: 100%;
+    margin: 0;
     background: var(--container-bg);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
@@ -79,8 +86,21 @@ h1 {
     margin-bottom: 20px;
 }
 
+#quiz-container {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: var(--header-height);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 #quiz-area {
-    margin-bottom: 20px;
+    padding: 20px 15px;
+    padding-bottom: calc(var(--footer-height) + 20px);
+    box-sizing: border-box;
 }
 
 #question-header {
@@ -283,10 +303,13 @@ small {
 
 #setup-area {
     background-color: var(--container-bg);
-    padding: 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 20px;
+    padding: 20px 20px;
+    padding-top: calc(var(--header-height) + 20px);
+    padding-bottom: 40px;
+    margin: 0 auto;
+    max-width: var(--content-max-width);
+    width: 100%;
+    box-sizing: border-box;
     text-align: center;
 }
 
@@ -348,10 +371,10 @@ input[type="number"]::-webkit-outer-spin-button {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
-    /* Keep margin for top one */
-    margin-bottom: 25px;
-    padding: 10px;
-    background-color: #eee;
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: var(--item-bg);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
 
@@ -430,12 +453,19 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Navigation Controls */
 #navigation-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--container-bg);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    padding: 10px max(15px, calc((100% - var(--content-max-width)) / 2));
+    padding-bottom: max(10px, var(--safe-bottom));
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
 }
 
 #navigation-controls button {
@@ -491,11 +521,13 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Results Area */
 #results-area {
     text-align: center;
-    padding: 30px;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    margin-top: 30px;
+    padding: 30px 15px;
+    padding-bottom: calc(var(--footer-height) + 40px);
+    background-color: var(--item-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 20px;
+    box-sizing: border-box;
 }
 
 #results-area h2 {
@@ -645,15 +677,25 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Utility Buttons Styling */
 #global-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--container-bg);
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    padding-top: max(0px, var(--safe-top));
 }
 
 #header-top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 8px 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #main-title {
@@ -675,9 +717,19 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-top: -2px;
 }
 
+#quiz-header {
+    position: sticky;
+    top: var(--header-height);
+    background: var(--container-bg);
+    z-index: 199;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
 #quiz-header h1 {
-    font-size: 1.3rem;
-    margin: 10px 0;
+    font-size: 1.2rem;
+    margin: 5px 0;
+    text-align: left;
 }
 
 #utility-buttons {
@@ -725,139 +777,32 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Mobile Optimized Layout */
+/* Small Screens Refinements */
 @media (max-width: 700px) {
-
-    html,
-    body {
-        margin: 0;
-        padding: 0;
-        /* Natural scroll — no overflow:hidden */
-    }
-
-    .container {
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    /* === DYNAMIC OFFSETS FOR SAFE AREAS === */
     :root {
-        --safe-top: env(safe-area-inset-top, 0px);
-        /* Base header height is 56px (8px top + 40px button + 8px bottom).
-           When safe-top > 8px, it grows accordingly. */
-        --header-height: calc(max(8px, var(--safe-top)) + 48px);
-    }
-
-    /* === GLOBAL HEADER: fixed at top, respects camera notch === */
-    #global-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 200;
-        padding: 8px 15px;
-        padding-top: max(8px, var(--safe-top));
-        border-bottom: 1px solid var(--border-color);
-        background: var(--container-bg);
+        --header-height: calc(max(8px, var(--safe-top)) + 45px);
     }
 
     #main-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .header-version {
         font-size: 0.6rem;
     }
 
-    /* === SETUP AREA: push below fixed header === */
-    #setup-area {
-        padding: 15px;
-        padding-top: calc(var(--header-height) + 15px);
-        margin-bottom: 0;
-        border-radius: 0;
-        border: none;
-        min-height: 100vh;
-        box-sizing: border-box;
-    }
-
     #setup-area h1 {
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        font-size: 0.95rem;
-    }
-
-    .checkbox-group {
-        max-height: none;
+        font-size: 1.3rem;
     }
 
     .start-btn {
         width: 100%;
         padding: 15px;
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-    }
-
-    /* === QUIZ CONTAINER: push below fixed global-header === */
-    #quiz-container {
-        min-height: 100vh;
-        padding-top: var(--header-height);
-        box-sizing: border-box;
-    }
-
-    /* === QUIZ HEADER (title + progress): sticky below global header === */
-    #quiz-header {
-        position: sticky;
-        top: var(--header-height);
-        left: 0;
-        right: 0;
-        z-index: 199;
-        padding: 5px 15px;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--container-bg);
+        font-size: 1.1rem;
     }
 
     #quiz-header h1 {
         font-size: 1.1rem;
-        text-align: left;
-        margin: 5px 0;
-    }
-
-    #progress-bar {
-        margin-bottom: 5px;
-        padding: 5px;
-    }
-
-    /* === QUIZ AREA: follows sticky header naturally === */
-    #quiz-area {
-        padding: 10px 15px;
-        padding-top: 0;
-        padding-bottom: calc(70px + 15px + env(safe-area-inset-bottom, 0px));
-        box-sizing: border-box;
-        margin-bottom: 0;
-    }
-
-    /* === NAVIGATION CONTROLS: fixed at bottom === */
-    #navigation-controls {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 200;
-        background: var(--container-bg);
-        padding: 10px 15px;
-        padding-bottom: max(10px, env(safe-area-inset-bottom));
-        border-top: 1px solid var(--border-color);
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
-        margin-top: 0;
     }
 
     #progress-bar-bottom {
