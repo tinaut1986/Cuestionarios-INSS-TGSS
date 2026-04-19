@@ -17,7 +17,7 @@ window.availableTypologies = [
 window.availableExams = [
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 01 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 01 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 01 (Tècnic Mig ADG)"
         },
         "id": "cbs_1",
@@ -27,7 +27,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 02 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 02 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 02 (Tècnic Mig ADG)"
         },
         "id": "cbs_2",
@@ -37,7 +37,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 03 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 03 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 03 (Tècnic Mig ADG)"
         },
         "id": "cbs_3",
@@ -47,7 +47,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 04 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 04 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 04 (Tècnic Mig ADG)"
         },
         "id": "cbs_4",
@@ -87,7 +87,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 08 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 08 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 08 (Tècnic Mig ADG)"
         },
         "id": "cbs_8",
@@ -97,7 +97,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 09 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 09 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 09 (Tècnic Mig ADG)"
         },
         "id": "cbs_9",
@@ -107,7 +107,7 @@ window.availableExams = [
     },
     {
         "title": {
-            "es": "CBS GIRONÈS-SALT - EXAMEN 10 (Tècnic Mig ADG)",
+            "es": "CBS GIRONÈS-SALT - EXAMEN 10 (Técnico Medio ADG)",
             "ca": "CBS GIRONÈS-SALT - EXAMEN 10 (Tècnic Mig ADG)"
         },
         "id": "cbs_10",

@@ -6,7 +6,7 @@ window.registerExam('cbs_7', {
     "ExamParts": [
         {
             "Type": "Theory",
-            "Title": { "es": "PART ÚNICA", "ca": "PART ÚNICA" },
+            "Title": { "es": "PARTE ÚNICA", "ca": "PART ÚNICA" },
             "Questions": [
                 {
                     "Number": 1,

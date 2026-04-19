@@ -1,12 +1,12 @@
 window.registerExam('cbs_11', {
     "Title": {
-        "es": "CBS GIRONÈS-SALT - EXAMEN 11 (Tècnic Mig ADG)",
+        "es": "CBS GIRONÈS-SALT - EXAMEN 11 (Técnico Medio ADG)",
         "ca": "CBS GIRONÈS-SALT - EXAMEN 11 (Tècnic Mig ADG)"
     },
     "ExamParts": [
         {
             "Type": "Theory",
-            "Title": { "es": "PART ÚNICA", "ca": "PART ÚNICA" },
+            "Title": { "es": "PARTE ÚNICA", "ca": "PART ÚNICA" },
             "Questions": [
                 {
                     "Number": 1,
